@@ -1,6 +1,7 @@
 spack:
   specs:
   - gcc +nvptx ^cuda@=12.4.0
+  - llvm
   view: true
   concretizer:
     unify: true
@@ -11,4 +12,5 @@ spack:
       root: /opt/spack
       padded_length: 128
   mirrors:
+    develop-2024-05-12: https://binaries.spack.io/develop-2024-05-12
     local-buildcache: oci://ghcr.io/psivaram/spack-buildcache
