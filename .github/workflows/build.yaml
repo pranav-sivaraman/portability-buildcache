@@ -1,0 +1,35 @@
+name: Spack buildcache build
+on: push
+env:
+  SPACK_BACKTRACE: please
+jobs:
+  rebuild:
+    runs-on: ubuntu-20.04
+    permissions:
+      packages: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Spack
+      uses: spack/setup-spack@v2
+
+    - name: Find compilers
+      run: spack -e . compiler find --mixed-toolchain
+
+    - name: Trust Buildcache
+      run: spack -e . buildcache keys --install --trust
+
+    - name: Concretize
+      run: spack -e . -v concretize
+
+    - name: Install
+      run: |
+        spack -e . env depfile -o Makefile
+        make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
+
+    - name: Push packages and update index
+      run: |
+        spack mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" github-actions-buildcache
+        spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index github-actions-buildcache
+      if: ${{ !cancelled() }}
