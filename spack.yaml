@@ -1,7 +1,10 @@
 spack:
   specs:
   - gcc +nvptx ^cuda@=12.4.0
-  - llvm
+  # - llvm # Use PSSG package repo one
+  # - nvhpc
+  # - intel-llvm
+  # - llvm-doe
   view: true
   concretizer:
     unify: true
