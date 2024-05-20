@@ -1,6 +1,6 @@
 spack:
   specs:
-  - gcc +nvptx
+  - gcc +nvptx ^cuda@=12.4.0
   view: true
   concretizer:
     unify: true
