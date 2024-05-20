@@ -1,0 +1,15 @@
+spack:
+  specs:
+  - gcc +nvptx
+  view: true
+  concretizer:
+    unify: true
+  config:
+    install_tree:
+      root: /opt/spack
+      padded_length: 128
+  packages:
+    all:
+      require: target=x86_64_v3
+  mirrors:
+    local-buildcache: oci://ghcr.io/psivaram/spack-buildcache

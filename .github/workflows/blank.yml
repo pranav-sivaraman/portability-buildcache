@@ -6,13 +6,25 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 jobs:
-  build:
+  setup-buildcache:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Run a one-line script
-        run: echo Hello, world!
-      - name: Run a multi-line script
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Spack
+        uses: spack/setup-spack@v2
+      - name: Find Compilers
+        run: spack -e . compiler find --mixed-toolchain
+      - name: Concretize
+        run: spack -e . -v concretize
+      - name: Install
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          spack -e . env depfile -o Makefile
+          make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
+      - name: Push packages and update index
+        run: |
+          spack mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" github-actions-buildcache
+          spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index github-actions-buildcache
+        if: ${{ !cancelled() }}
