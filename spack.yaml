@@ -1,10 +1,6 @@
 spack:
   specs:
-  - gcc +nvptx ^cuda@=12.4.0
-  # - llvm # Use PSSG package repo one
-  # - nvhpc
-  # - intel-llvm
-  # - llvm-doe
+  - gcc +nvptx
   view: true
   concretizer:
     unify: true
@@ -12,8 +8,12 @@ spack:
       granularity: generic
   config:
     install_tree:
-      root: /opt/spack
+      # root: /opt/spack
       padded_length: 128
+  packages:
+    cuda:
+      require:
+      - '@=12.4'
   mirrors:
     develop-2024-05-12: https://binaries.spack.io/develop-2024-05-12
-    local-buildcache: oci://ghcr.io/psivaram/spack-buildcache
+    local-buildcache: oci://ghcr.io/pranav-sivaraman/spack-buildcache
