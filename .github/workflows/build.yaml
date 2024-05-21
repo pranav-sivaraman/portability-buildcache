@@ -10,7 +10,7 @@ jobs:
     - name: Setup Spack
       uses: spack/setup-spack@v2
     - name: Find Compilers 
-      run: spack -e compiler find --mixed-toolchain
+      run: spack -e . compiler find --mixed-toolchain
     - name: Concretize
       run: spack -e . -v concretize
     - name: Install
