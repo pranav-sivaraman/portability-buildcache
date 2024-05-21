@@ -1,6 +1,7 @@
 spack:
   specs:
-  - gcc +nvptx ^cuda@=12.4.0
+  # - gcc +nvptx
+  - intel-llvm
   view: true
   concretizer:
     unify: true
@@ -13,4 +14,15 @@ spack:
   mirrors:
     develop: https://binaries.spack.io/develop
     local-buildcache: oci://ghcr.io/pranav-sivaraman/spack-buildcache
-
+  repos:
+  - ./pssg
+  packages:
+    cuda:
+      require:
+      - "@=12.4.0"
+    hip:
+      require:
+      - "@=6.0.0"
+    hsa-rocr-dev:
+      require:
+      - "@=6.0.0"
