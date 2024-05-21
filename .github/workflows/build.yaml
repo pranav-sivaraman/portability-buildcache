@@ -30,6 +30,6 @@ jobs:
 
     - name: Push packages and update index
       run: |
-        spack mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" github-actions-buildcache
-        spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index github-actions-buildcache
+        spack mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" portability-buildcache
+        spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index portability-buildcache
       if: ${{ !cancelled() }}
