@@ -1,7 +1,6 @@
 spack:
   specs:
-  # - gcc +nvptx
-  - intel-llvm
+  - hip
   view: true
   concretizer:
     unify: true
@@ -17,6 +16,9 @@ spack:
   repos:
   - ./pssg
   packages:
+    all:
+      prefer:
+      - generator=make
     cuda:
       require:
       - '@=12.4.0'
