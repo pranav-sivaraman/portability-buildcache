@@ -12,17 +12,17 @@ spack:
       root: /opt/spack
       padded_length: 128
   mirrors:
-    develop: https://binaries.spack.io/develop
+    develop-2024-05-19: https://binaries.spack.io/develop-2024-05-19
     local-buildcache: oci://ghcr.io/pranav-sivaraman/spack-buildcache
   repos:
   - ./pssg
   packages:
     cuda:
       require:
-      - "@=12.4.0"
+      - '@=12.4.0'
     hip:
       require:
-      - "@=6.0.0"
+      - '@=6.0.0'
     hsa-rocr-dev:
       require:
-      - "@=6.0.0"
+      - '@=6.0.0'
