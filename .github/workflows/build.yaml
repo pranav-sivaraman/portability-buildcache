@@ -19,6 +19,6 @@ jobs:
         make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
     - name: Push packages and update index
       run: |
-        spack mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
+        spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
         spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index local-buildcache
       if: ${{ !cancelled() }}
