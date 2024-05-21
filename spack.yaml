@@ -1,7 +1,6 @@
 spack:
   specs:
-  - zlib-api
-  # - gcc +nvptx
+  - gcc +nvptx
   view: true
   concretizer:
     unify: true
