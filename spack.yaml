@@ -17,4 +17,4 @@ spack:
       - '@=12.4'
   mirrors:
     develop-2024-05-12: https://binaries.spack.io/develop-2024-05-12
-    local-buildcache: oci://ghcr.io/pranav-sivaraman/portability-buildcache
+    local-buildcache: oci://ghcr.io/pranav-sivaraman/spack-buildcache
