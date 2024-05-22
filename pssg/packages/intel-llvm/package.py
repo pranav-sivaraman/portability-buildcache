@@ -15,17 +15,24 @@ class IntelLlvm(CMakePackage):
 
     homepage = "https://github.com/intel/llvm"
     git = "https://github.com/intel/llvm.git"
+    url = "https://github.com/intel/llvm/archive/refs/tags/nightly-2024-01-20.tar.gz"
 
     license("Apache-2.0")
 
     version("sycl", branch="sycl")
+    version(
+        "2024-01-20", sha256="dc5fff15b1cc9600345afac1c865a3a1d7889dc37f3de2b0eb764fe6bccffd37"
+    )
+
+    variant("cuda", default=False, description="Build with CUDA backend")
+    variant("rocm", default=False, description="Build with ROCm backend")
 
     depends_on("cmake@3.20:", type="build")
 
-    depends_on("cuda")
+    depends_on("cuda", when="+cuda")
 
-    depends_on("hip")
-    depends_on("hsa-rocr-dev")
+    depends_on("hip", when="+rocm")
+    depends_on("hsa-rocr-dev", when="+rocm")
 
     root_cmakelists_dir = "llvm"
     build_targets = ["deploy-sycl-toolchain"]
@@ -35,9 +42,6 @@ class IntelLlvm(CMakePackage):
         define = self.define
 
         llvm_external_projects = "sycl;llvm-spirv;opencl;xpti;xptif"
-
-        libclc_amd_target_names = ";amdgcn--amdhsa"
-        libclc_nvidia_target_names = ";nvptx64--nvidiacl"
 
         if spec.platform != "darwin":
             llvm_external_projects += ";libdevice"
@@ -50,11 +54,9 @@ class IntelLlvm(CMakePackage):
         xptifw_dir = os.path.join(source_path, "xptifw")
         libdevice_dir = os.path.join(source_path, "libdevice")
         fusion_dir = os.path.join(source_path, "sycl-fusion")
-        llvm_targets_to_build = "NVPTX;AMDGPU;" + get_llvm_targets_to_build(
-            spec.target.family
-        )
-        llvm_enable_projects = "clang;lld;libclc" + llvm_external_projects
-        libclc_targets_to_build = libclc_amd_target_names + libclc_nvidia_target_names
+        llvm_targets_to_build = get_llvm_targets_to_build(spec.target.family)
+        llvm_enable_projects = "clang;lld;" + llvm_external_projects
+        libclc_targets_to_build = ""
         libclc_gen_remangled_variants = "ON"
         sycl_build_pi_hip_platform = "AMD"
         sycl_clang_extra_flags = ""
@@ -63,12 +65,28 @@ class IntelLlvm(CMakePackage):
         llvm_enable_sphinx = "OFF"
         llvm_build_shared_libs = "OFF"
         llvm_enable_lld = "OFF"
-        sycl_enabled_plugins = "opencl;level_zero;hip;cuda"
+        sycl_enabled_plugins = "opencl;level_zero"
         sycl_preview_lib = "ON"
 
         sycl_enable_xpti_tracing = "ON"
         xpti_enable_werror = "OFF"
         sycl_enable_fusion = "OFF"
+
+        if spec.satisfies("+cuda") or spec.satisfies("+rocm"):
+            llvm_enable_projects += ";libclc"
+
+            libclc_amd_target_names = ";amdgcn--amdhsa"
+            libclc_nvidia_target_names = ";nvptx64--nvidiacl"
+
+            if spec.satisfies("+cuda"):
+                libclc_targets_to_build += libclc_nvidia_target_names
+                sycl_enabled_plugins += ";cuda"
+                llvm_targets_to_build += ";NVPTX"
+
+            if spec.satisfies("+rocm"):
+                libclc_targets_to_build += libclc_amd_target_names
+                sycl_enabled_plugins += ";hip"
+                llvm_targets_to_build += ";AMDGPU"
 
         args = [
             define("LLVM_TARGETS_TO_BUILD", llvm_targets_to_build),
@@ -97,16 +115,28 @@ class IntelLlvm(CMakePackage):
             define("BUG_REPORT_URL", "https://github.com/intel/llvm/issues"),
             define("LIBCLC_TARGETS_TO_BUILD", libclc_targets_to_build),
             define("LIBCLC_GENERATE_REMANGLED_VARIANTS", libclc_gen_remangled_variants),
-            define("CUDA_TOOLKIT_ROOT_DIR", spec["cuda"].prefix),
-            define("SYCL_BUILD_PI_HIP_INCLUDE_DIR", spec["hip"].prefix.include),
-            define(
-                "SYCL_BUILD_PI_HIP_HSA_INCLUDE_DIR", spec["hsa-rocr-dev"].prefix.include
-            ),
-            define("SYCL_BUILD_PI_HIP_LIB_DIR", spec["hip"].prefix.lib),
-            define("UR_HIP_INCLUDE_DIR", spec["hip"].prefix.include),
-            define("UR_HIP_HSA_INCLUDE_DIRS", spec["hsa-rocr-dev"].prefix.include),
-            define("UR_HIP_LIB_DIR", spec["hip"].prefix.lib),
         ]
+
+        if spec.satisfies("+cuda"):
+            args.extend(
+                [
+                    define("CUDA_TOOLKIT_ROOT_DIR", spec["cuda"].prefix),
+                ]
+            )
+
+        if spec.satisfies("+rocm"):
+            args.extend(
+                [
+                    define("SYCL_BUILD_PI_HIP_INCLUDE_DIR", spec["hip"].prefix.include),
+                    define(
+                        "SYCL_BUILD_PI_HIP_HSA_INCLUDE_DIR", spec["hsa-rocr-dev"].prefix.include
+                    ),
+                    define("SYCL_BUILD_PI_HIP_LIB_DIR", spec["hip"].prefix.lib),
+                    define("UR_HIP_INCLUDE_DIR", spec["hip"].prefix.include),
+                    define("UR_HIP_HSA_INCLUDE_DIRS", spec["hsa-rocr-dev"].prefix.include),
+                    define("UR_HIP_LIB_DIR", spec["hip"].prefix.lib),
+                ]
+            )
 
         if self.compiler.name == "gcc":
             args.append(define("GCC_INSTALL_PREFIX", self.compiler.prefix))
