@@ -19,6 +19,8 @@ class IntelLlvm(CMakePackage):
 
     license("Apache-2.0")
 
+    generator("ninja")
+
     version("sycl", branch="sycl")
     version(
         "2024-01-20", sha256="dc5fff15b1cc9600345afac1c865a3a1d7889dc37f3de2b0eb764fe6bccffd37"
