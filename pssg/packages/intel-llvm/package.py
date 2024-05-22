@@ -131,4 +131,4 @@ def get_llvm_targets_to_build(family):
         host_target = "Sparc"
     elif family in ("ppc64", "ppc64le", "ppc", "ppcle"):
         host_target = "PowerPC"
-    return host_targe
+    return host_target
