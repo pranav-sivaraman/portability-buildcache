@@ -35,7 +35,7 @@ class Adaptivecpp(CMakePackage):
     depends_on("llvm +clang", when="^llvm")
 
     depends_on("cuda", when="+cuda")
-    depends_on("rocm", when="+rocm")
+    depends_on("hip", when="+rocm")
 
     def cmake_args(self):
         spec = self.spec
