@@ -6,14 +6,6 @@ spack:
     unify: true
     targets:
       granularity: generic
-    reuse:
-      from:
-      - type: buildcache
-        include:
-        - cuda
-        - hip
-        - hsa-rocr-dev
-        - llvm-amdgpu
   config:
     install_tree:
       root: /opt/spack
