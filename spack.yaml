@@ -4,6 +4,8 @@ spack:
   view: true
   concretizer:
     unify: true
+    targets:
+      granularity: generic
   config:
     install_tree:
       root: /opt/spack
@@ -15,8 +17,6 @@ spack:
   - ./pssg
   packages:
     all:
-      require:
-      - target=x86_64
       prefer:
       - generator=make
     cuda:
