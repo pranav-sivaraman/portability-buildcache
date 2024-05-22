@@ -20,11 +20,11 @@ jobs:
       - name: Setup Spack
         uses: spack/setup-spack@v2
         
-      - name: Trust Buildcache
-        run: spack -e . buildcache keys --install --trust
-        
       - name: Find Compilers
         run: spack -e . compiler find --mixed-toolchain
+        
+      - name: Trust Buildcache
+        run: spack -e . buildcache keys --install --trust
         
       - name: Concretize
         run: spack -e . -v concretize
