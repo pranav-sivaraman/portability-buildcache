@@ -1,6 +1,6 @@
 spack:
   specs:
-  - hip
+  - adaptivecpp +cuda +rocm
   view: true
   concretizer:
     unify: true
