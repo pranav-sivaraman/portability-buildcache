@@ -1,6 +1,6 @@
 spack:
   specs:
-  - adaptivecpp +cuda +rocm
+  - llvm@18.1.6
   view: true
   concretizer:
     unify: true
