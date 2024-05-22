@@ -16,9 +16,6 @@ spack:
   repos:
   - ./pssg
   packages:
-    all:
-      prefer:
-      - generator=make
     cuda:
       require:
       - '@=12.4.0'
@@ -26,5 +23,8 @@ spack:
       require:
       - '@=6.1.0'
     hsa-rocr-dev:
+      require:
+      - '@=6.1.0'
+    llvm-amdgpu:
       require:
       - '@=6.1.0'
