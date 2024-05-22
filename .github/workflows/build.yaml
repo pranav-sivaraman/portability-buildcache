@@ -19,7 +19,9 @@ jobs:
         
       - name: Setup Spack
         uses: spack/setup-spack@v2
-        
+        with:
+          ref: develop
+
       - name: Find Compilers
         run: spack -e . compiler find --mixed-toolchain
         
