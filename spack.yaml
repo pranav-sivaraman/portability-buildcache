@@ -12,7 +12,7 @@ spack:
       padded_length: 128
   mirrors:
     develop-2024-05-19: https://binaries.spack.io/develop-2024-05-19
-    local-buildcache: oci://ghcr.io/pranav-sivaraman/spack-buildcache
+    local-buildcache: oci://ghcr.io/pranav-sivaraman/portability-buildcache
   repos:
   - ./pssg
   packages:
