@@ -1,6 +1,10 @@
 spack:
-  specs:
+  compilers:
   - intel-llvm +cuda +rocm
+  specs:
+    - matrix:
+      - [$compilers]
+      - ["%gcc@12.3.0"]
   view: true
   concretizer:
     unify: true
@@ -11,6 +15,7 @@ spack:
       root: /opt/spack
       padded_length: 128
     install_missing_compilers: true
+    reuse: dependencies
   mirrors:
     develop-2024-05-19: https://binaries.spack.io/develop-2024-05-19
     local-buildcache:
@@ -19,9 +24,6 @@ spack:
   repos:
   - ./pssg
   packages:
-    all:
-      prefer:
-      - "%gcc@=12.3.0"
     cuda:
       require:
       - "@=12.4.0"
