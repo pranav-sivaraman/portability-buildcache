@@ -1,6 +1,6 @@
 spack:
   compilers:
-  - intel-llvm +cuda +rocm
+  - "intel-llvm +cuda +rocm"
   specs:
     - matrix:
       - [$compilers]
