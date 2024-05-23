@@ -1,6 +1,7 @@
 spack:
   specs:
-  - intel-llvm +cuda +rocm
+  - zstd
+  # - intel-llvm +cuda +rocm
   view: true
   concretizer:
     unify: true
@@ -10,6 +11,7 @@ spack:
     install_tree:
       root: /opt/spack
       padded_length: 128
+    install_missing_compilers: true
   mirrors:
     develop-2024-05-19: https://binaries.spack.io/develop-2024-05-19
     local-buildcache:
@@ -18,15 +20,18 @@ spack:
   repos:
   - ./pssg
   packages:
+    all:
+      prefer:
+      - "%gcc@=12.3.0"
     cuda:
       require:
-      - '@=12.4.0'
+      - "@=12.4.0"
     hip:
       require:
-      - '@=6.1.0'
+      - "@=6.1.0"
     hsa-rocr-dev:
       require:
-      - '@=6.1.0'
+      - "@=6.1.0"
     llvm-amdgpu:
       require:
-      - '@=6.1.0'
+      - "@=6.1.0"
