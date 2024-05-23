@@ -1,6 +1,6 @@
 spack:
   specs:
-  - intel-llvm +cuda
+  - intel-llvm +cuda +rocm
   view: true
   concretizer:
     unify: true
@@ -12,7 +12,9 @@ spack:
       padded_length: 128
   mirrors:
     develop-2024-05-19: https://binaries.spack.io/develop-2024-05-19
-    local-buildcache: oci://ghcr.io/pranav-sivaraman/portability-buildcache
+    local-buildcache:
+      url: oci://ghcr.io/pranav-sivaraman/portability-buildcache
+      signed: false
   repos:
   - ./pssg
   packages:
