@@ -1,6 +1,6 @@
 spack:
   specs:
-  - zstd
+  - hip
   view: true
   concretizer:
     unify: true
@@ -11,7 +11,6 @@ spack:
     install_tree:
       root: /opt/spack
       padded_length: 128
-    install_missing_compilers: true
   mirrors:
     develop-2024-05-19: https://binaries.spack.io/develop-2024-05-19
     local-buildcache:
@@ -20,9 +19,6 @@ spack:
   repos:
   - ./pssg
   packages:
-    all:
-      require:
-      - "%gcc@=12.3.0"
     cuda:
       require:
       - "@=12.4.0"
