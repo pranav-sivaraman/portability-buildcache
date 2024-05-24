@@ -6,6 +6,7 @@ spack:
     unify: true
     targets:
       granularity: generic
+    reuse: dependencies
   config:
     install_tree:
       root: /opt/spack
