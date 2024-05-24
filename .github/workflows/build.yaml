@@ -14,8 +14,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # - name: Free Disk Space (Ubuntu)
-      #   uses: jlumbroso/free-disk-space@v1.3.1
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
         
       - name: Setup Spack
         uses: spack/setup-spack@v2
@@ -28,14 +28,14 @@ jobs:
         
       - name: Concretize
         run: spack -e . -v concretize
-        
-      # - name: Install
-      #   run: |
-      #     spack -e . env depfile -o Makefile
-      #     make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
-      #     
-      # - name: Push packages and update index
-      #   run: |
-      #     spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
-      #     spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
-      #   if: ${{ !cancelled() }}
+    
+      - name: Install
+        run: |
+          spack -e . env depfile -o Makefile
+          make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
+          
+      - name: Push packages and update index
+        run: |
+          spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
+          spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
+        if: ${{ !cancelled() }}
