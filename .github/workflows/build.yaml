@@ -17,12 +17,6 @@ jobs:
       # - name: Free Disk Space (Ubuntu)
       #   uses: jlumbroso/free-disk-space@v1.3.1
 
-      - name: Set up GCC
-        uses: egor-tensin/setup-gcc@v1
-        with:
-          version: 12
-          platform: x64
-
       - name: Setup Spack
         uses: spack/setup-spack@v2
 
