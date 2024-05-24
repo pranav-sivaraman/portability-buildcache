@@ -1,6 +1,11 @@
 spack:
+  definitions:
+    - default_specs:
+      - intel-llvm +cuda +rocm
   specs:
-  - hip %gcc@=12.3.0
+  - matrix:
+    - - $default_specs
+    - - $%gcc@=12.3.0
   view: true
   concretizer:
     unify: true
