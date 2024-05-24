@@ -1,6 +1,6 @@
 spack:
   specs:
-  - zstd
+  - flap
   view: true
   concretizer:
     unify: true
