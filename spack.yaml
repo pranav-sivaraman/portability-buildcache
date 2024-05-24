@@ -2,10 +2,12 @@ spack:
   definitions:
     - default_specs:
       - intel-llvm +cuda +rocm
+    - default_compiler:
+      - gcc@=12.3.0
   specs:
   - matrix:
     - - $default_specs
-    - "%gcc@=12.3.0"
+    - - $%default_compiler
   view: true
   concretizer:
     unify: true
