@@ -23,6 +23,9 @@ class IntelLlvm(CMakePackage):
 
     version("sycl", branch="sycl")
     version(
+        "2024-05-21", sha256="1c39baec23b5b71b9b8f94c8825154b8edc3ef78ced53baf2c84d626b2c0ad54"
+    )
+    version(
         "2024-01-20", sha256="dc5fff15b1cc9600345afac1c865a3a1d7889dc37f3de2b0eb764fe6bccffd37"
     )
 
