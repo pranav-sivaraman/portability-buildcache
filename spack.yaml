@@ -1,6 +1,6 @@
 spack:
   specs:
-  - hip %gcc@=12.3.0
+  - hip %gcc@=13.2.0
   view: false
   concretizer:
     unify: true
