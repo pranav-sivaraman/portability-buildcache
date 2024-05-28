@@ -27,8 +27,8 @@ jobs:
 
       - name: Bootstrap GCC
         run: |
-          spack buildcache install gcc@=12.3.0
-          spack load gcc@=12.3.0
+          spack buildcache list gcc
+          # spack load gcc@=12.3.0
           
       - name: Find Compilers
         run: spack -e . compiler find --mixed-toolchain
