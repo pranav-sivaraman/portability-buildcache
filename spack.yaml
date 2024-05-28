@@ -1,6 +1,6 @@
 spack:
   specs:
-  - hip %gcc@=11.1.0
+  - hip
   view: false
   concretizer:
     unify: true
@@ -10,9 +10,7 @@ spack:
     install_tree:
       root: /opt/spack
       padded_length: 128
-    install_missing_compilers: true
   mirrors:
-    develop-2024-05-19: https://binaries.spack.io/develop-2024-05-19
     local-buildcache:
       url: oci://ghcr.io/pranav-sivaraman/portability-buildcache
       signed: false

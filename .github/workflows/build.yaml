@@ -19,12 +19,19 @@ jobs:
 
       - name: Setup Spack
         uses: spack/setup-spack@v2
+        
+      - name: Setup Buildcache
+        run: |
+          spack mirror add develop-2024-05-26 https://binaries.spack.io/develop-2024-05-26
+          spack buildcache keys --install --trust
 
+      - name: Bootstrap GCC
+        run: |
+          spack buildcache install gcc@=12.3.0
+          spack load gcc@=12.3.0
+          
       - name: Find Compilers
         run: spack -e . compiler find --mixed-toolchain
-        
-      - name: Trust Buildcache
-        run: spack -e . buildcache keys --install --trust
         
       - name: Concretize
         run: spack -e . -v concretize
