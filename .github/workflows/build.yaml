@@ -19,7 +19,7 @@ jobs:
 
       - name: Setup Spack
         uses: spack/setup-spack@v2
-        
+
       - name: Setup Buildcache
         run: |
           spack mirror add develop-2024-05-26 https://binaries.spack.io/develop-2024-05-26
@@ -27,9 +27,9 @@ jobs:
 
       - name: Bootstrap GCC
         run: |
-          spack buildcache list gcc
-          # spack load gcc@=12.3.0
-          
+          spack buildcache install gcc@=14.1.0
+          spack load gcc
+
       - name: Find Compilers
         run: spack -e . compiler find --mixed-toolchain
         
