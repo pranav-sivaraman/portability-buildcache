@@ -1,6 +1,6 @@
 spack:
   specs:
-  - gcc@=12.3.0
+  - hip %gcc@=14.1.0
   view: false
   concretizer:
     unify: true
@@ -10,6 +10,7 @@ spack:
     install_tree:
       root: /opt/spack
       padded_length: 128
+    install_missing_compilers: true
   mirrors:
     develop-2024-05-26: https://binaries.spack.io/develop-2024-05-26
     local-buildcache:
