@@ -1,7 +1,7 @@
 spack:
   specs:
   - gcc
-  view: false
+  view: true
   concretizer:
     unify: true
     targets:
