@@ -29,22 +29,21 @@ jobs:
         run: spack compiler find --mixed-toolchain
         
       - name: Bootstrap GCC
+        shell: spack-bash {0}
         run: |
-          spack -e bootstrap -v concretize
-          spack -e bootstrap install
-          spack find
-          spack compiler find --mixed-toolchain $(spack location -i gcc)/bin
+          spack install gcc
+          spack load gcc && spack compiler find --mixed-toolchain
 
       - name: Concretize
-        run: spack -e compilers -v concretize
+        run: spack -e . -v concretize
     
       - name: Install
         run: |
-          spack -e compilers env depfile -o Makefile
+          spack -e . env depfile -o Makefile
           make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
           
       - name: Push packages and update index
         run: |
-          spack -e compilers mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
-          spack -e compilers buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
+          spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
+          spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
         if: ${{ !cancelled() }}
