@@ -1,12 +1,6 @@
 spack:
   specs:
-  - intel-llvm +cuda
-  - intel-llvm +rocm
-  - gcc +nvptx
-  - gcc +amdgcn
-  - adaptivecpp +cuda
-  - adaptivecpp +rocm
-  - llvm # Use PSSG package.py one until upstream fix is merged
+  - intel-llvm +cuda +rocm
   view: false
   concretizer:
     unify: false

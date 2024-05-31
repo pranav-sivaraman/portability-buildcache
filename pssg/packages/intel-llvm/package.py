@@ -123,11 +123,7 @@ class IntelLlvm(CMakePackage):
         ]
 
         if spec.satisfies("+cuda"):
-            args.extend(
-                [
-                    define("CUDA_TOOLKIT_ROOT_DIR", spec["cuda"].prefix),
-                ]
-            )
+            args.append(define("CUDA_TOOLKIT_ROOT_DIR", spec["cuda"].prefix))
 
         if spec.satisfies("+rocm"):
             args.extend(
