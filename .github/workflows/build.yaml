@@ -32,7 +32,7 @@ jobs:
         run: |
           spack -e bootstrap -v concretize
           spack -e bootstrap install
-          spack load gcc && spack compiler find --mixed-toolchain
+          spack -e bootstrap load gcc && spack compiler find --mixed-toolchain
 
       - name: Concretize
         run: spack -e compilers -v concretize
