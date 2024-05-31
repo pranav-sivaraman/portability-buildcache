@@ -1,0 +1,14 @@
+spack:
+  specs:
+  - gcc
+  view: false
+  concretizer:
+    unify: true
+    targets:
+      granularity: generic
+  config:
+    install_tree:
+      root: /opt/spack
+      padded_length: 128
+  mirrors:
+    develop-2024-05-26: https://binaries.spack.io/develop-2024-05-26

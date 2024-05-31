@@ -25,25 +25,25 @@ jobs:
           spack mirror add develop-2024-05-26 https://binaries.spack.io/develop-2024-05-26
           spack buildcache keys --install --trust
 
+      - name: Find Compilers
+        run: spack compiler find --mixed-toolchain
+        
       - name: Bootstrap GCC
         run: |
-          spack buildcache list gcc
-          spack buildcache install gcc@=14.1.0
-          spack load gcc
+          spack -e bootstrap -v concretize
+          spack -e bootstrap install
+          spack load gcc && spack compiler find --mixed-toolchain
 
-      - name: Find Compilers
-        run: spack -e . compiler find --mixed-toolchain
-        
       - name: Concretize
-        run: spack -e . -v concretize
+        run: spack -e compilers -v concretize
     
       - name: Install
         run: |
-          spack -e . env depfile -o Makefile
+          spack -e compilers env depfile -o Makefile
           make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
           
       - name: Push packages and update index
         run: |
-          spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
-          spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
+          spack -e compilers mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
+          spack -e compilers buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
         if: ${{ !cancelled() }}
