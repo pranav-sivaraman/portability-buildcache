@@ -37,5 +37,5 @@ jobs:
       - name: Push packages and update index
         run: |
           spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
-          spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
+          spack -d -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
         if: ${{ !cancelled() }}
