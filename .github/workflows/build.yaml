@@ -20,9 +20,12 @@ jobs:
       - name: Setup Spack
         uses: spack/setup-spack@v2
 
-      - name: Find Compilers
-        run: spack -e . compiler find --mixed-toolchain
-        
+      - name: Setup Mold
+        run: |
+          spack compiler find --mixed-toolchain
+          spack install mold
+          sudo ln -s $(spack location -i mold)/bin/ld.mold /usr/bin/ld
+
       - name: Concretize
         run: spack -e . -v concretize
     

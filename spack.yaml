@@ -1,7 +1,6 @@
 spack:
   specs:
-  - hip
-  - cuda
+  - llvm-amdgpu
   view: false
   concretizer:
     unify: false
