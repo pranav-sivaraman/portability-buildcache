@@ -24,7 +24,7 @@ jobs:
         run: |
           spack compiler find --mixed-toolchain
           spack install mold
-          sudo ln -s $(spack location -i mold)/bin/ld.mold /usr/bin/ld
+          sudo rm /usr/bin/ld && sudo ln -s $(spack location -i mold)/bin/ld.mold /usr/bin/ld
 
       - name: Concretize
         run: spack -e . -v concretize
