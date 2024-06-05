@@ -18,8 +18,7 @@ jobs:
 
       - name: Check Python
         run: |
-          /opt/python/*/bin/python --version
-          /opt/python/*/bin/python3 --version
+          /opt/python/cp312-cp312/bin/python --version
           
       - name: Setup Spack
         uses: ./.github/actions/
