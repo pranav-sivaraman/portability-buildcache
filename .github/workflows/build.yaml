@@ -16,6 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Check Python
+        uses: |
+          python --version
+          python3 --version
+          
       - name: Setup Spack
         uses: ./.github/actions/
 
