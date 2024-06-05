@@ -9,9 +9,6 @@ jobs:
   my_job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      
       - name: Run commands in Docker container
         uses: docker://quay.io/pypa/manylinux2014_x86_64
         with:
@@ -28,3 +25,7 @@ jobs:
             echo 'This step runs inside the container'
             # Add commands that need to run inside the container
             "
+
+      - name: Check python
+        run: python --version
+
