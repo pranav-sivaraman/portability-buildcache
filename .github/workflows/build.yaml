@@ -26,6 +26,9 @@ jobs:
       - name: Trust Buildcache
         run: spack -e . buildcache keys --install --trust
 
+      - name: Find compilers
+        run: spack -e . compiler find --mixed-toolchain
+
       - name: Concretize
         run: spack -e . -v concretize
 
