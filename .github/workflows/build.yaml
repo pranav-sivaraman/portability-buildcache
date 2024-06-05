@@ -18,8 +18,8 @@ jobs:
 
       - name: Check Python
         run: |
-          python --version
-          python3 --version
+          which python 
+          ls /opt/python/
           
       - name: Setup Spack
         uses: ./.github/actions/
