@@ -1,47 +1,47 @@
-name: "Perf-Port Spack Buildcache"
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
-jobs:
-  setup-buildcache:
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-    container:
-      image: quay.io/pypa/manylinux2014_x86_64
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup newer python
-        run: |
-          export SPACK_PYTHON="/opt/python/cp312-cp312/bin/python"
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v2
-          
-      - name: Setup Spack
-        uses: ./.github/actions/
-
-      - name: Find compilers
-        run: spack -e . compiler find --mixed-toolchain
-
-      - name: Trust buildcache
-        run: spack -e . buildcache keys -it
-          
-      - name: Concretize
-        run: spack -e . -v concretize
-    
-      - name: Install
-        run: |
-          spack -e . env depfile -o Makefile
-          make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
-          
-      - name: Push packages and update index
-        run: |
-          spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
-          spack -d -e . buildcache push -j $(($(nproc) + 1)) --base-image quay.io/pypa/manylinux2014_x86_64 --update-index --force local-buildcache
-        if: ${{ !cancelled() }}
+# name: "Perf-Port Spack Buildcache"
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
+#   workflow_dispatch:
+# jobs:
+#   setup-buildcache:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       packages: write
+#     container:
+#       image: quay.io/pypa/manylinux2014_x86_64
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#
+#       - name: Setup newer python
+#         run: |
+#           export SPACK_PYTHON="/opt/python/cp312-cp312/bin/python"
+#
+#       - name: Setup tmate session
+#         uses: mxschmitt/action-tmate@v2
+#           
+#       - name: Setup Spack
+#         uses: ./.github/actions/
+#
+#       - name: Find compilers
+#         run: spack -e . compiler find --mixed-toolchain
+#
+#       - name: Trust buildcache
+#         run: spack -e . buildcache keys -it
+#           
+#       - name: Concretize
+#         run: spack -e . -v concretize
+#     
+#       - name: Install
+#         run: |
+#           spack -e . env depfile -o Makefile
+#           make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
+#           
+#       - name: Push packages and update index
+#         run: |
+#           spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
+#           spack -d -e . buildcache push -j $(($(nproc) + 1)) --base-image quay.io/pypa/manylinux2014_x86_64 --update-index --force local-buildcache
+#         if: ${{ !cancelled() }}
