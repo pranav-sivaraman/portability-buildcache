@@ -1,6 +1,6 @@
 spack:
   specs:
-  - mold
+  - zstd
   view: false
   concretizer:
     unify: false

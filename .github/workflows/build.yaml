@@ -22,3 +22,20 @@ jobs:
 
       - name: Setup Spack
         uses: ./.github/actions/
+
+      - name: Trust Buildcache
+        run: spack -e . buildcache keys --install --trust
+
+      - name: Concretize
+        run: spack -e . -v concretize
+
+      - name: Install
+        run: |
+          spack -e . env depfile -o Makefile
+          make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
+
+      - name: Push packages and update index
+        run: |
+          spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
+          spack -e . buildcache push -j $(($(nproc) + 1)) --base-image quay.io/pypa/manylinux2014_x86_64 --update-index --force local-buildcache
+        if: ${{ !cancelled() }}
