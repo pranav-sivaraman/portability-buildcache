@@ -1,0 +1,69 @@
+name: "Setup Spack"
+author: "haampie"
+description: "Setup Spack"
+branding:
+  icon: "package"
+  color: "blue"
+inputs:
+  ref:
+    description: "Version of Spack (git ref: develop, releases/v0.21, ...)"
+    required: false
+    default: develop
+  buildcache:
+    description: "Enable the GitHub Action build cache"
+    required: false
+    default: "true"
+  color:
+    description: "Force color output (sets SPACK_COLOR=always)"
+    required: false
+    default: "true"
+  path:
+    description: "Path to install Spack to"
+    required: false
+    default: "spack"
+runs:
+  using: "composite"
+  steps:
+  - name: Checkout Spack
+    uses: actions/checkout@v3
+    with:
+      repository: spack/spack
+      path: ${{ inputs.path }}
+      ref: ${{ inputs.ref }}
+
+  - name: Spack environment variables
+    run: |
+      echo "$(realpath ${{ inputs.path }}/bin)" >> "$GITHUB_PATH"
+      [ "${{ inputs.color }}" = "true" ] && echo "SPACK_COLOR=always" >> "$GITHUB_ENV"
+      echo "SPACK_DISABLE_LOCAL_CONFIG=1" >> "$GITHUB_ENV"
+    shell: sh
+
+  - name: Spack configuration
+    run: |
+      if [ ${{ inputs.buildcache }} = "true" ]; then
+        # Spack 0.22 should support the --unsigned flag
+        spack mirror add --unsigned github-actions-buildcache oci://ghcr.io/spack/github-actions-buildcache || \
+        spack mirror add github-actions-buildcache oci://ghcr.io/spack/github-actions-buildcache
+      fi
+    shell: sh
+
+  - name: Create Spack bash shell
+    run: |
+      cat > ${{ inputs.path }}/bin/spack-bash <<EOF
+      #!/bin/bash
+      set -e -o pipefail
+      SPACK_ROOT="$(realpath ${{ inputs.path }})" . "$(realpath ${{ inputs.path }})/share/spack/setup-env.sh"
+      . "\$1"
+      EOF
+      chmod +x ${{ inputs.path }}/bin/spack-bash
+    shell: sh
+
+  - name: Create Spack sh shell
+    run: |
+      cat > ${{ inputs.path }}/bin/spack-sh <<EOF
+      #!/bin/sh -e
+      SPACK_ROOT="$(realpath ${{ inputs.path }})" . "$(realpath ${{ inputs.path }})/share/spack/setup-env.sh"
+      . "\$1"
+      EOF
+      chmod +x ${{ inputs.path }}/bin/spack-sh
+    shell: sh
