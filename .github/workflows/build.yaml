@@ -18,7 +18,7 @@ jobs:
 
       - name: Setup newer python
         run: |
-          export SPACK_PYTHON=/opt/python/cp312-cp312/bin/python
+          echo "SPACK_PYTHON=/opt/python/cp312-cp312/bin/python" >> $GITHUB_ENV
 
       - name: Setup Spack
         uses: ./.github/actions/
