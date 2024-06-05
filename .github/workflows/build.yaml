@@ -19,6 +19,9 @@ jobs:
       - name: Setup newer python
         run: |
           export SPACK_PYTHON="/opt/python/cp312-cp312/bin/python"
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v2
           
       - name: Setup Spack
         uses: ./.github/actions/
