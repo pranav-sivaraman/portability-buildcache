@@ -22,6 +22,9 @@ jobs:
 
       - name: Setup Spack
         uses: ./.github/actions/
+        with:
+          ref: develop
+          buildcache: false
 
       - name: Trust Buildcache
         run: spack -e . buildcache keys --install --trust
