@@ -17,7 +17,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup newer python
-        run: export PATH="/opt/python/cp312-cp312/bin/python:$PATH"
+        run: |
+          export PATH="/opt/python/cp312-cp312/bin/python:$PATH"
+          python --version
           
       - name: Setup Spack
         uses: ./.github/actions/
