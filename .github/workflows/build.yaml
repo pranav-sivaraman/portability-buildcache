@@ -20,26 +20,32 @@ jobs:
         run: |
           echo "SPACK_PYTHON=/opt/python/cp312-cp312/bin/python" >> $GITHUB_ENV
 
-      - name: Setup Spack
+      - name: Setup Spack # Use older checkout for Spack
         uses: ./.github/actions/
         with:
           ref: develop
           buildcache: false
 
-      - name: Trust Buildcache
-        run: spack -e . buildcache keys --install --trust
+      - name: Trust buildcache
+        run: |
+          spack mirror add develop-2024-06-02 https://binaries.spack.io/develop-2024-06-02
+          spack buildcache keys --install --trust
 
       - name: Find compilers
-        run: spack -e . compiler find --mixed-toolchain
+        run: spack compiler find --mixed-toolchain
+
+      - name: Install newer gmake
+        shell: spack-bash {0}
+        run: |
+          spack install gmake && spack load gmake
 
       - name: Concretize
         run: spack -e . -v concretize
 
       - name: Install
         run: |
-          SPACK_INSTALL_FLAGS=--no-check-signature spack -e . install
-          # spack -e . env depfile -o Makefile
-          # make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
+          spack -e . env depfile -o Makefile
+          make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
 
       - name: Push packages and update index
         run: |
