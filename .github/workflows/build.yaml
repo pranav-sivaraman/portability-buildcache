@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Spack
-        uses: ./.github/actions/action.yml
+        uses: ./.github/actions/
 
       - name: Find compilers
         run: spack -e . compiler find --mixed-toolchain
