@@ -1,15 +1,30 @@
-name: "Test"
+name: My Workflow
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  setup:
+  my_job:
     runs-on: ubuntu-latest
-    container: quay.io/pypa/manylinux2014_x86_64
-    
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
+      
+      - name: Run commands in Docker container
+        uses: docker://quay.io/pypa/manylinux2014_x86_64
+        with:
+          entrypoint: /bin/bash
+          args: |
+            -c "
+            echo 'This is a step before initializing the container'
+            # Add more commands as needed before initializing the container
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v2
+            echo 'This is another action before initializing the container'
+            # Add more commands as needed before initializing the container
+
+            # Now you are inside the container
+            echo 'This step runs inside the container'
+            # Add commands that need to run inside the container
+            "
