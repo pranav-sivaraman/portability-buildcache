@@ -5,23 +5,9 @@ on: [push]
 jobs:
   setup:
     runs-on: ubuntu-latest
+    container: quay.io/pypa/manylinux2014_x86_64
     
     steps:
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          build-mount-path: /var/lib/docker/
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-
-      - name: Restart docker
-        run: sudo service docker restart
-
-      - name: Initialize Docker container
-        uses: docker://quay.io/pypa/manylinux2014_x86_64
-
       - name: Checkout code
         uses: actions/checkout@v2
 
