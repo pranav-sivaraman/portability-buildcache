@@ -5,7 +5,7 @@ on: [push]
 jobs:
   setup:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -16,13 +16,12 @@ jobs:
           remove-haskell: 'true'
           remove-codeql: 'true'
           remove-docker-images: 'true'
+
       - name: Restart docker
         run: sudo service docker restart
 
-  start:
-    runs-on: ubuntu-latest
-    container: quay.io/pypa/manylinux2014_x86_64
+      - name: Initialize Docker container
+        uses: docker://quay.io/pypa/manylinux2014_x86_64
 
-    steps:
       - name: Checkout code
         uses: actions/checkout@v2
