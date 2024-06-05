@@ -18,7 +18,7 @@ jobs:
 
       - name: Setup newer python
         run: |
-          echo "SPACK_PYTHON=/opt/python/cp312-cp312/bin/python" >> $GITHUB_ENV
+          echo "SPACK_PYTHON=/opt/python/cp312-cp312/bin/python" >> "$GITHUB_ENV"
 
       - name: Setup Spack # Use older checkout for Spack
         uses: ./.github/actions/
@@ -35,9 +35,9 @@ jobs:
         run: spack compiler find --mixed-toolchain
 
       - name: Install newer gmake
-        shell: spack-bash {0}
         run: |
-          spack install gmake && spack load gmake
+          spack install gmake
+          echo "$(spack location -i gmake)/bin" >> "$GITHUB_PATH"
 
       - name: Concretize
         run: spack -e . -v concretize
