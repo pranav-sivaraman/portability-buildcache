@@ -1,41 +1,40 @@
-# name: "Perf-Port Spack Buildcache"
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
-#   workflow_dispatch:
-# jobs:
-#   setup-buildcache:
-#     runs-on: ubuntu-20.04
-#     permissions:
-#       packages: write
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-#
-#       - name: Free Disk Space (Ubuntu)
-#         uses: jlumbroso/free-disk-space@v1.3.1
-#
-#       - name: Setup Spack
-#         uses: spack/setup-spack@v2
-#
-#       - name: Setup Mold
-#         run: |
-#           spack compiler find --mixed-toolchain
-#           spack install mold
-#           sudo rm /usr/bin/ld && sudo ln -s $(spack location -i mold)/bin/ld.mold /usr/bin/ld
-#
-#       - name: Concretize
-#         run: spack -e . -v concretize
-#     
-#       - name: Install
-#         run: |
-#           spack -e . env depfile -o Makefile
-#           make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
-#           
-#       - name: Push packages and update index
-#         run: |
-#           spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
-#           spack -d -e . buildcache push -j $(($(nproc) + 1)) --base-image ubuntu:20.04 --update-index --force local-buildcache
-#         if: ${{ !cancelled() }}
+name: "Perf-Port Spack Buildcache"
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  setup-buildcache:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    container:
+      image: quay.io/pypa/manylinux2014_x86_64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Spack
+        uses: spack/setup-spack@v2
+
+      - name: Find compilers
+        run: spack -e . compiler find --mixed-toolchain
+
+      - name: Trust buildcache
+        run: spack -e . buildcache keys -it
+          
+      - name: Concretize
+        run: spack -e . -v concretize
+    
+      - name: Install
+        run: |
+          spack -e . env depfile -o Makefile
+          make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
+          
+      - name: Push packages and update index
+        run: |
+          spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
+          spack -d -e . buildcache push -j $(($(nproc) + 1)) --base-image quay.io/pypa/manylinux2014_x86_64 --update-index --force local-buildcache
+        if: ${{ !cancelled() }}

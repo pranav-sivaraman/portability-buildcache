@@ -1,6 +1,6 @@
 spack:
   specs:
-  - llvm-amdgpu
+  - mold
   view: false
   concretizer:
     unify: false
@@ -11,6 +11,7 @@ spack:
       root: /opt/spack
       padded_length: 128
   mirrors:
+    develop-2024-06-02-developer-tools-manylinux2014: https://binaries.spack.io/develop-2024-06-02/developer-tools-manylinux2014
     local-buildcache:
       url: oci://ghcr.io/pranav-sivaraman/portability-buildcache
       signed: false
