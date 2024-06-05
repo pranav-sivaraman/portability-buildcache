@@ -18,7 +18,7 @@ jobs:
 
       - name: Setup newer python
         run: |
-          export PATH="/opt/python/cp312-cp312/bin/python:$PATH"
+          export PATH="/opt/python/cp312-cp312/bin:$PATH"
           python --version
           
       - name: Setup Spack
