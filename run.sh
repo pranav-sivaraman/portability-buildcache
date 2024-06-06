@@ -1,9 +1,5 @@
 #!/bin/bash
 
-echo $OCI_USERNAME
-echo $OCI_PASSWORD
-echo $CONTAINER
-
 # Setup Spack
 export SPACK_PYTHON=/opt/python/cp312-cp312/bin/python
 git clone -c feature.manyFiles=true https://github.com/spack/spack.git
