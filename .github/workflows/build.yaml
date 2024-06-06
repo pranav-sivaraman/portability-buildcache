@@ -1,26 +1,41 @@
 name: "Perf-Port Spack Buildcache"
+
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
+
 jobs:
   setup-buildcache:
     runs-on: ubuntu-latest
     permissions:
       packages: write
-    container:
-      image: quay.io/pypa/manylinux2014_ppc64le
     steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: ppc64le
+
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and run container
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          docker buildx create --use
+          docker buildx build --platform linux/ppc64le -t my-container .
+          docker run --platform linux/ppc64le my-container
 
       - name: Setup newer python
         run: |
           echo "SPACK_PYTHON=/opt/python/cp312-cp312/bin/python" >> "$GITHUB_ENV"
 
-      - name: Setup Spack # Use older checkout for Spack
+      - name: Setup Spack
         uses: ./.github/actions/
         with:
           ref: develop
@@ -50,5 +65,5 @@ jobs:
       - name: Push packages and update index
         run: |
           spack -e . mirror set --push --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" local-buildcache
-          spack -e . buildcache push -j $(($(nproc) + 1)) --base-image quay.io/pypa/manylinux2014_x86_64 --update-index --force local-buildcache
+          spack -e . buildcache push -j $(($(nproc) + 1)) --base-image quay.io/pypa/manylinux2014_ppc64le --update-index --force local-buildcache
         if: ${{ !cancelled() }}
