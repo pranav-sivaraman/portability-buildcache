@@ -24,5 +24,5 @@ spack -e . env depfile -o Makefile
 make -Orecurse -j $(($(nproc) + 1)) SPACK_INSTALL_FLAGS=--no-check-signature
 
 # Push packages and update index
-spack -e . mirror set --push --oci-username $OCI_USERNAME --oci-password $OCI_PASSWORD local-buildcache
-spack -e . buildcache push -j $(($(nproc) + 1)) --base-image $CONTAINER --update-index --force local-buildcache
+spack -e . mirror set --push --oci-username "${OCI_USERNAME}" --oci-password "${OCI_PASSWORD}" local-buildcache
+spack -e . buildcache push -j $(($(nproc) + 1)) --base-image ${CONTAINER} --update-index --force local-buildcache
